@@ -1,0 +1,122 @@
+{% graphql questions = 'survey/index' | fetch: 'models' | fetch: 'results' %}
+{% graphql answers = 'answer/index' | fetch: 'models' | fetch: 'results' %}
+{% graphql client = 'client/index' | fetch: 'models' | fetch: 'results' %}
+
+<div class="flex flex-row flex-wrap min-h-screen justify-start items-start">
+
+  <div class="w-full">
+    <div class="bg-ex-darkblue w-full shadow-xl flex items-center h-16">
+      <a href = "https://sew-technicaltest.staging.oregon.platform-os.com/" class="text-white font-semibold -mt-px ml-3 pl-3 border-l border-ex-lightblue">
+        SalonEverywhere
+        <span class="font-light">Technical Test</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="my-10 px-10 md:px-0 w-full">
+    <h2 class="text-2xl font-semibold text-center">
+      COVID-19 Symptoms Screening Questionnaire
+    </h2>
+
+    <div class="max-w-2xl mx-auto mt-10">
+      {% if questions.size > 0 %}
+        <ol>
+          <li>
+              <p>Do you have any of the symptoms or signs?</p>
+              {% for quest in questions limit:11 %}
+              {% assign comfirmed = false %}
+              <ul>
+                  <li>
+                      <p>{{quest.question}}</p>
+                      {% for ans in answers %}
+                        {% if ans.survey_id == quest.id and ans.client_id == client[0].id %}
+                          {% assign comfirmed = true %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor%}
+
+                      {% if comfirmed != true %}
+                        <form
+                          action="/answer/create/{{ quest.id }}"
+                          method="POST"
+                          x-show="open === true">
+
+                          <input type="text" name="content" placeholder="Yes/No" required>
+
+                          <button class="button button5">Confirm</button>
+                      </form>
+                      {% else %}
+                        <form
+                          action="/answer/create/{{ quest.id }}"
+                          method="POST"
+                          x-show="open === true">
+
+                          <input type="text" name="content" placeholder="Comfirmed" disabled>
+                        </form>
+                      {% endif %}
+
+                  </li>
+              </ul>
+              <br>
+              <br>
+              {% endfor %}
+          </li>
+
+          <br>
+
+
+          {% for quest in questions offset:11 %}
+          {% assign comfirmed = false %}
+            <li>
+                <p>{{quest.question}}</p>
+                {% for ans in answers %}
+                  {% if ans.survey_id == quest.id and ans.client_id == client[0].id %}
+                    {% assign comfirmed = true %}
+                    {% break %}
+                  {% endif %}
+                {% endfor%}
+
+                {% if comfirmed != true %}
+                  <form
+                    action="/answer/create/{{ quest.id }}"
+                    method="POST"
+                    x-show="open === true">
+
+                    <input type="text" name="content" placeholder="Yes/No" required>
+
+                    <button class="button button5">Confirm</button>
+                </form>
+                {% else %}
+                  <form
+                    action="/answer/create/{{ quest.id }}"
+                    method="POST"
+                    x-show="open === true">
+
+                    <input type="text" name="content" placeholder="Comfirmed" disabled>
+                  </form>
+                {% endif %}
+
+            </li>
+            <br>
+            <br>
+          {% endfor %}
+        </ol>
+
+      {% else %}
+        <p>Sorry, the survey is not yet available.</p>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <div class="bg-ex-lightgrey mt-auto w-full">
+    <div class="max-w-2xl flex justify-between items-center mx-auto py-3">
+      <a href="https://saloneverywhere.com/" target="_blank">SalonEverywhere</a>
+      
+
+      <p class="-mt-px ml-3 pl-3 border-l border-ex-lightblue">
+        <span class="font-light">Technical Test</span>
+      </p>
+    </div>
+
+</div>

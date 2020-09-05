@@ -1,0 +1,10 @@
+mutation create($email: String!) {
+  model_create(
+    model: {
+      model_schema_name: "client"
+      properties: { name: "email", value: $email }
+    }
+  ) {
+    id
+  }
+}

@@ -1,0 +1,4 @@
+name: survey
+properties: 
+  - name: question
+    type: string

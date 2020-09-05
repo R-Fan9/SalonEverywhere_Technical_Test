@@ -1,0 +1,15 @@
+query index {
+  models(
+    per_page: 1
+    filter: {
+      model_schema_name: { value: "client" }
+      properties: { name: "email", exists: true }
+    }
+    sort: { created_at: { order: DESC } }
+  ) {
+    results {
+      id
+      email: property(name: "email")
+    }
+  }
+}

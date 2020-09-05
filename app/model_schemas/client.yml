@@ -1,0 +1,4 @@
+name: client
+properties:
+   - name: email
+     type: string

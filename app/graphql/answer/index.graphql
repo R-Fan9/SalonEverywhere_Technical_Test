@@ -1,0 +1,21 @@
+query index {
+  models(
+    per_page: 20
+    filter: {
+      model_schema_name: { value: "answer" }
+      properties: [
+        { name: "client_id", exists: true }
+        { name: "survey_id", exists: true }
+      ]
+      
+    }
+    sort: { created_at: { order: DESC } }
+  ) {
+    results {
+      id
+      client_id: property(name: "client_id")
+      survey_id: property(name: "survey_id")
+      
+    }
+  }
+}

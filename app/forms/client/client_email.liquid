@@ -1,0 +1,35 @@
+---
+name: client_email
+resource: User
+email_notifications:
+  - welcome_user
+resource_owner: anyone
+redirect_to: /survey
+fields:
+  email:
+  profiles:
+    client:
+      properties:
+        enabled:
+          property_options:
+            default: true
+            readonly: true
+      validation:
+        presence: true
+    validation:
+      presence: true
+callback_actions: |-
+  {% graphql result = 'client/create', email: form.email %}
+---
+
+{% form %}
+  <label for="email" class="font-semibold">Email</label>
+  <input name="{{ form.fields.email.name }}" value="{{ form.fields.email.value }}" id="email" type="email">
+  {% if form.errors.email %}
+    <p>{{ form.errors.email }}</p>
+  {% endif %}
+
+  <input value="{{ form.fields.profiles.client.properties.enabled.value }}" name="{{ form.fields.profiles.client.properties.enabled.name }}" type="hidden">
+
+  <button class="button button5">Submit</button>
+{% endform %}

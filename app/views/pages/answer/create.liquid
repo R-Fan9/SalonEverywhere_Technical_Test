@@ -1,0 +1,37 @@
+---
+method: post
+---
+{%- assign survey_id = context.params.slug3 -%}
+{%- assign content = context.params.content -%}
+{%- assign  count = 0 -%}
+
+{% graphql client = 'client/index' | fetch: 'models' | fetch: 'results' %}
+
+{% graphql result = 'answer/create', client_id: client[0].id, survey_id: survey_id, content: content %}
+
+{% assign answer = result | fetch: "model_create" %}
+
+{% if answer.id %}
+    {% graphql questions = 'survey/index' | fetch: 'models' | fetch: 'results' %}
+    {% graphql answers = 'answer/index' | fetch: 'models' | fetch: 'results' %}
+
+    {% for quest in questions %}
+        {% for ans in answers %}
+            {% if ans.client_id == client[0].id and ans.survey_id == quest.id %}
+                {% assign count = count | plus: 1 %}
+            {% endif %}
+        {% endfor %}
+    {%endfor%}
+
+    {% if count == questions.size %}
+        <script>window.location.href = '/thank_you';</script>
+    {% else %}
+        <script>window.location.href = '/survey';</script>
+    {% endif %}
+
+{% else %}
+    Something went wrong :(
+    <br>
+    {{ result.errors }}
+{% endif %}
+

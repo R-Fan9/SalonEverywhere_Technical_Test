@@ -1,0 +1,8 @@
+name: answer
+properties:
+  - name: client_id
+    type: string
+  - name: survey_id
+    type: string
+  - name: content
+    type: string

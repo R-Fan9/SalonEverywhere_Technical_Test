@@ -1,0 +1,15 @@
+query index {
+  models(
+    per_page: 14
+    filter: {
+      model_schema_name: { value: "survey" }
+      properties: { name: "question", exists: true }
+    }
+    sort: { created_at: { order: ASC } }
+  ) {
+    results {
+      id
+      question: property(name: "question")
+    }
+  }
+}
